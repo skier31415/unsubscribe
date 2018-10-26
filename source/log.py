@@ -4,7 +4,7 @@ import traceback
 import sys
 import os
 
-allOff = True
+allOff = False
 cloudLog = True
 logger = None
 tid = 'tiddefault'
