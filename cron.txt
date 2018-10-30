@@ -1,0 +1,19 @@
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+#good noe
+# every sixth hour get emails
+0 5,11,17,23 * * * sudo gcloud -q compute --project "hosting-2718" instances start --zone "us-east1-d" "unsub2"
+
+
+# every sixth hour process emails in spots
+
+
+0 0 * * * sudo gcloud -q compute instances delete spot0 --zone=us-east1-d; sudo gcloud beta -q compute --project=hosting-2718 instances create-with-container spot0 --zone=us-east1-d --machine-type=n1-standard-1 --subnet=default --metadata=google-logging-enabled=true --maintenance-policy=TERMINATE --preemptible --no-restart-on-failure  --service-account=182434325615-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/cloud-platform --image=cos-stable-70-11021-51-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=spot0 --container-image=gcr.io/hosting-2718/unsubslave --container-restart-policy=always --labels=container-vm=cos-stable-70-11021-51-0
+
+0 6 * * * sudo gcloud -q compute instances delete spot6 --zone=us-east1-d; sudo gcloud beta -q compute --project=hosting-2718 instances create-with-container spot6 --zone=us-east1-d --machine-type=n1-standard-1 --subnet=default --metadata=google-logging-enabled=true --maintenance-policy=TERMINATE --preemptible --no-restart-on-failure  --service-account=182434325615-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/cloud-platform --image=cos-stable-70-11021-51-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=spot6 --container-image=gcr.io/hosting-2718/unsubslave --container-restart-policy=always --labels=container-vm=cos-stable-70-11021-51-0
+
+0 12 * * * sudo gcloud -q compute instances delete spot12 --zone=us-east1-d; sudo gcloud beta -q compute --project=hosting-2718 instances create-with-container spot12 --zone=us-east1-d --machine-type=n1-standard-1 --subnet=default --metadata=google-logging-enabled=true --maintenance-policy=TERMINATE --preemptible --no-restart-on-failure  --service-account=182434325615-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/cloud-platform --image=cos-stable-70-11021-51-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=spot12 --container-image=gcr.io/hosting-2718/unsubslave --container-restart-policy=always --labels=container-vm=cos-stable-70-11021-51-0
+
+0 18 * * * sudo gcloud -q compute instances delete spot18 --zone=us-east1-d; sudo gcloud beta -q compute --project=hosting-2718 instances create-with-container spot18 --zone=us-east1-d --machine-type=n1-standard-1 --subnet=default --metadata=google-logging-enabled=true --maintenance-policy=TERMINATE --preemptible --no-restart-on-failure  --service-account=182434325615-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/cloud-platform --image=cos-stable-70-11021-51-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=spot18 --container-image=gcr.io/hosting-2718/unsubslave --container-restart-policy=always --labels=container-vm=cos-stable-70-11021-51-0

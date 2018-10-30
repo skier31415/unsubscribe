@@ -1,5 +1,7 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'gcr.io/consulting-2718/main', '.' ]
+  args: [ 'build', '-f', 'Dockerfile_slave', '-t', 'gcr.io/hosting-2718/unsubslave', '.' ]
 images:
-- 'gcr.io/consulting-2718/main'
+- 'gcr.io/hosting-2718/unsubslave'
+
+# gcloud container builds submit --config=cb.yaml .
