@@ -1,4 +1,4 @@
-selenium==3.11.0
+selenium==3.14.1
 MySQL-python==1.2.5
 pyvirtualdisplay
 google-cloud-logging

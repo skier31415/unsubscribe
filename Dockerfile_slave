@@ -30,6 +30,7 @@ RUN sh /app/geckodriver.sh
 
 COPY unsubscribe/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
+RUN pip install --ignore-installed urllib3
 
 
 

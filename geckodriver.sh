@@ -10,7 +10,7 @@
 #chmod +x /app/chromedriver
 
 
-wget -N https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -P /app/
+wget -N https://github.com/mozilla/geckodriver/releases/download/v0.22.0/geckodriver-v0.22.0-linux64.tar.gz -P /app/
 
-tar -xvzf /app/geckodriver-v0.20.1-linux64.tar.gz
+tar -xvzf /app/geckodriver-v0.22.0-linux64.tar.gz
 
