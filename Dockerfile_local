@@ -44,3 +44,5 @@ ENTRYPOINT ["python"]
 
 CMD ["local.py"]
 #CMD ["main.py"]
+
+#docker build -f Dockerfile_local .
