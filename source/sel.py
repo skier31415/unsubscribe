@@ -15,10 +15,11 @@ confirmPositives = ['unsubscribed', 'success', 'thank you', 'updated', 'have rem
 
 js_code = "return document.getElementsByTagName('html')[0].innerHTML;"
 
-class Timeout():
+class TimeoutException(Exception):
+  pass
+    
+class TimeoutClass():
   """Timeout class using ALARM signal."""
-  class Timeout(Exception):
-    pass
 
   def __init__(self, sec):
     self.sec = sec
@@ -31,18 +32,15 @@ class Timeout():
     signal.alarm(0)    # disable alarm
 
   def raise_timeout(self, *args):
-    raise Timeout.Timeout()
+    raise TimeoutException()
 
 def browserGetPage(browser,url): 
   try:
-    with Timeout(pageTimeout):
-      try:
-        browser.get(url)
-      except Exception as e:
-        log.warn('exception getting url '+ url)
-        log.warn(e)
+    browser.get(url)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
-    log.warn('timed out on' + url)
+    log.warn('exception getting url '+ url)
     log.warn(e)
     closeBrowser(browser)
     browser = getBrowser()
@@ -76,6 +74,8 @@ def getPageBody(browser):
   body = ''
   try:
     body = browser.execute_script(js_code)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.warn('exception executing js')
     log.warn(e)
@@ -85,6 +85,8 @@ def getPageBody(browser):
   body = ''
   try:
     body = browser.page_source
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.warn('exception getting page source')
     log.warn(e)
@@ -115,6 +117,8 @@ def processPage(unsub, browser):
   try:
     browser = process(unsub, browser)
     return browserDoneConfirmed(browser)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.info('exception'+ str(e))
   return False
@@ -192,6 +196,8 @@ def doFun(fun, args=None):
     if args:
       fun(args)
       return True
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.info('exception', e)
   return False
@@ -349,6 +355,8 @@ def processFrame(browser, email):
     result = None
     try:
       result = ff(browser, email)
+    except TimeoutException as e:
+      raise TimeoutException()
     except Exception as e:
       log.info('exception', e)
   funs = [atags, buttons, onclicks]
@@ -357,6 +365,8 @@ def processFrame(browser, email):
     try:
       pcs = ff(browser, email)
       possibleClicks.update(pcs)
+    except TimeoutException as e:
+      raise TimeoutException()
     except Exception as e:
       log.info('exception', e)
   log.info('possible clicks ' + str(len(possibleClicks)))
@@ -383,6 +393,8 @@ def clickGeneral(browser, elem):
       if not result:
         jss = elem.get_attribute('onclick')
         browser.execute_script(jss)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.info('exception ', str(e))
     
@@ -401,6 +413,8 @@ def closeBrowser(browser):
     browser.close()
     #display.stop()
     time.sleep(2)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.warn('exception closing browser')
     log.warn(e)
@@ -412,6 +426,8 @@ def refreshBrowser(browser):
     browser = browserGetPage(browser,url)
     browser, body = getPageBody(browser)
     body = body.lower()
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
     log.warn('exception refreshing browser', str(e))
   if 'whatsmybrowser.org' not in body:

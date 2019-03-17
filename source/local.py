@@ -10,17 +10,15 @@ from sql import fetch
 from sql import commit
 
 def countPending():
-  results = fetch('select count(*) from unsubs')
+  results = fetch('select count(hash) from unsubs')
   print 'num pending', results
   results = fetch('select * from unsubs')
-  print 'pending', results
+  #print 'pending', results
   
-  results = fetch('select count(hash) from unsubs')
-  print results
   results = fetch('select count(distinct unsubhash) as b from anonymousanalytics group by emailhash order by b desc')
   #print results
   results = fetch('select count(distinct emailhash ) from anonymousanalytics ')
-  print results
+  print 'num distict helped', results
 
 def deleteAllUnsubs():
   commit('delete from unsubs where true')
@@ -36,7 +34,7 @@ def percentSuccess():
   
 percentSuccess()
 countPending()
-deleteAllUnsubs()
+#deleteAllUnsubs()
 #import sel
 
 class Uns:

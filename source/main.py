@@ -11,11 +11,11 @@ import string
 import random 
 from datetime import timedelta
 
+from sel import TimeoutClass, TimeoutException
+
 salt = 'mysalt'
+timeout = 90
 
-
-class Timeout(selenium.Timeout):
-  pass
 
 def newHash():
   lets = string.ascii_letters[:26] + string.digits
@@ -108,59 +108,51 @@ def removeDockerCruft():
   #log.info('docker cruft deleted')
 
 def handleDB(it):
-  for jj in range(10):
-    ll, origSet = getFive()
-    if not ll:
-      if it > 2:
-        log.info('empty turning off')
-        #time.sleep(120)  # wait for master to finish
-        turnOff()
-      return
-    browser = selenium.getBrowser()
-    log.info(str(len(ll))+str(ll)+str(jj))
-    try:
-      i = 0
-      for uns in ll:
-        if i > 6:
-          break
-        i+=1
-        log.info('hashh',uns.hashh)
-        res = unsubscribe(uns, browser)
-        if not res:
-          log.info('failed confirmation', uns.hashh)
-          addEmailToSqlAnalytics(uns,False)
-        else:
-          log.info('confirmed unsub')
-          commit('insert into usercount (another) values (1)')
-          addEmailToSqlAnalytics(uns,True)
-        #browser = selenium.refreshBrowser(browser)
-    except Exception as e:
-      log.warn(e)
-    log.info('deleting from unsubs '+str(origSet))
-    for ss in origSet:
-      commit('delete from unsubs where hash=%s', ss)
-    selenium.closeBrowser(browser)
+  ll, origSet = getFive()
+  if not ll:
+    if it > 2:
+      log.info('empty turning off')
+      #time.sleep(120)  # wait for master to finish
+      turnOff()
+    return
+  browser = selenium.getBrowser()
+  log.info(str(len(ll))+str(ll))
+  try:
+    i = 0
+    for uns in ll:
+      if i > 6:
+        break
+      i+=1
+      log.info('hashh',uns.hashh)
+      res = unsubscribe(uns, browser)
+      if not res:
+        log.info('failed confirmation', uns.hashh)
+        addEmailToSqlAnalytics(uns,False)
+      else:
+        log.info('confirmed unsub')
+        commit('insert into usercount (another) values (1)')
+        addEmailToSqlAnalytics(uns,True)
+      #browser = selenium.refreshBrowser(browser)
+  except TimeoutException as e:
+    raise TimeoutException()
+  except Exception as e:
+    log.warn(e)
+  log.info('deleting from unsubs '+str(origSet))
+  for ss in origSet:
+    commit('delete from unsubs where hash=%s', ss)
+  selenium.closeBrowser(browser)
 
 def unsubscribe(unsub, browser):
   try:
     ans = False
-    timeout = 120
-    try:
-      with Timeout(timeout):
-        try:
-          ans = selenium.processPage(unsub,browser)
-        except Exception as e:
-          log.warn('exception processing unsub '+ st(unsub))
-          log.warn(e)
-          ans = False
-    except Exception as e:
-      log.warn('timed out on' + str(unsub))
-      log.warn(e)
-      ans = False
-    return ans
+    ans = selenium.processPage(unsub,browser)
+  except TimeoutException as e:
+    raise TimeoutException()
   except Exception as e:
-    log.info(e)
-  return False
+    log.warn('exception processing unsub '+ str(unsub))
+    log.warn(e)
+    ans = False
+  return ans
   
 def numUnsubs():
   results = fetch('select hash from unsubs')
@@ -198,7 +190,6 @@ def mainMaster(wipe=False):
     if it % 1000 == 0:
       mail = gmail.connect()
     #removeDockerCruft()
-    time.sleep(sleeplen)
     turnOffInstanceFromDocker()
 
 def getAnalyticsForEmail(email):
@@ -246,22 +237,21 @@ def mainSlave():
   while True:
     it += 1
     try:
-      if it > 30:
+      if it > 300:
         restart()
       num = numUnsubs()
       log.info('current num unsubs ' + str(num))
       if num == oldNum:
         timesSame += 1
+      else:
+        timesSame = 0
       oldNum = num
-      if timesSame > 15:
+      if timesSame > 30:
         deleteAllUnsubs()
-      handleDB(it)
+      with TimeoutClass(timeout):
+        handleDB(it)
     except Exception as e:
       log.info('exception', e)
-    rr = random.randint(20,40)
-    time.sleep(rr)
-    log.info('sleeping for '+str(rr))
-    time.sleep(rr)
 
 
 

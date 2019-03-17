@@ -152,7 +152,7 @@ def readEmailFromGmail(mail):
   log.info('login and get emails')
 
   mail.select('inbox')
-  now = (datetime.datetime.now()-timedelta(days=2)).strftime('%d-%b-%Y') 
+  now = (datetime.datetime.now()-timedelta(days=7)).strftime('%d-%b-%Y') 
   if now[0] == '0':
     now = now[1:]
   log.info('(SINCE %s)' % now)
