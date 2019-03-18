@@ -115,37 +115,36 @@ def handleDB(it):
       #time.sleep(120)  # wait for master to finish
       turnOff()
     return
-  browser = selenium.getBrowser()
   log.info(str(len(ll))+str(ll))
+  res = False
   try:
     i = 0
-    for uns in ll:
-      if i > 6:
-        break
-      i+=1
+    uns = ll[0]
+    for i in range(2):
       log.info('hashh',uns.hashh)
-      res = unsubscribe(uns, browser)
-      if not res:
-        log.info('failed confirmation', uns.hashh)
-        addEmailToSqlAnalytics(uns,False)
-      else:
-        log.info('confirmed unsub')
-        commit('insert into usercount (another) values (1)')
-        addEmailToSqlAnalytics(uns,True)
-      #browser = selenium.refreshBrowser(browser)
-  except TimeoutException as e:
-    raise TimeoutException()
+      with TimeoutClass(timeout):
+        res = unsubscribe(uns)
+      if res:
+        break
   except Exception as e:
     log.warn(e)
+  if not res:
+    log.info('failed confirmation', uns.hashh)
+    addEmailToSqlAnalytics(uns,False)
+  else:
+    log.info('confirmed unsub')
+    commit('insert into usercount (another) values (1)')
+    addEmailToSqlAnalytics(uns,True)
   log.info('deleting from unsubs '+str(origSet))
   for ss in origSet:
     commit('delete from unsubs where hash=%s', ss)
-  selenium.closeBrowser(browser)
 
-def unsubscribe(unsub, browser):
+def unsubscribe(unsub):
   try:
     ans = False
+    browser = selenium.getBrowser()
     ans = selenium.processPage(unsub,browser)
+    selenium.closeBrowser(browser)
   except TimeoutException as e:
     raise TimeoutException()
   except Exception as e:
@@ -246,10 +245,9 @@ def mainSlave():
       else:
         timesSame = 0
       oldNum = num
-      if timesSame > 30:
+      if timesSame > 15 and num < 5:
         deleteAllUnsubs()
-      with TimeoutClass(timeout):
-        handleDB(it)
+      handleDB(it)
     except Exception as e:
       log.info('exception', e)
 

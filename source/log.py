@@ -25,6 +25,7 @@ def log(entry, bucket='main', severity='INFO'):
     return
   try:
     exc_type, exc_obj, exc_tb = sys.exc_info()
+    sys.exc_clear()
     entry += ' ' + str(exc_type)
     entry += ' ' + str(exc_obj)
     if not exc_type:

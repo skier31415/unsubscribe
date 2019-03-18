@@ -59,9 +59,8 @@ def getBrowser():
   #   log.info('got here')
   log.info('getting browser')
   global display
-  if not display:
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+  display = Display(visible=0, size=(800, 600))
+  display.start()
   # capabilities = webdriver.DesiredCapabilities().FIREFOX
   # capabilities["marionette"] = False
   # browser = webdriver.Firefox(capabilities=capabilities)
