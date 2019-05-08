@@ -28,6 +28,7 @@ ENV PATH="/app:${PATH}"
 COPY unsubscribe/geckodriver.sh /app/geckodriver.sh
 RUN sh /app/geckodriver.sh
 
+RUN pip install setuptools -U
 COPY unsubscribe/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 RUN pip install --ignore-installed urllib3
@@ -44,3 +45,5 @@ RUN echo "$(cat /app/main.py)\nmainSlave()" > /app/main.py
 ENTRYPOINT ["python"]
 
 CMD ["main.py"]
+
+# cp unsubscribe/Dockerfile* .; docker build -f Dockerfile_slave -t latest .; docker tag latest gcr.io/hosting-2718/unsubslave; docker push gcr.io/hosting-2718/unsubslave;

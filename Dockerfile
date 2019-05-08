@@ -28,6 +28,7 @@ ENV PATH="/app:${PATH}"
 COPY unsubscribe/geckodriver.sh /app/geckodriver.sh
 RUN sh /app/geckodriver.sh
 
+RUN pip install setuptools -U
 COPY unsubscribe/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
@@ -43,3 +44,5 @@ RUN echo "$(cat /app/main.py)\nmainMaster()" > /app/main.py
 ENTRYPOINT ["python"]
 
 CMD ["main.py"]
+
+# cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/hosting-2718/unsubmaster; docker push gcr.io/hosting-2718/unsubmaster;

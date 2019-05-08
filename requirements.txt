@@ -1,5 +1,4 @@
 selenium==3.14.1
 MySQL-python==1.2.5
 pyvirtualdisplay
-google-cloud-logging
-google-api-python-client
+google-api-python-client==1.7.4
