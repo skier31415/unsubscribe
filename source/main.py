@@ -84,7 +84,7 @@ def addEmailToSqlAnalytics(uns, success=False):
 def turnOffInstanceFromDocker():
   import os
   log.info('done sleeping in master')
-  os.system('gcloud compute  --project "hosting-2718"  instances delete --zone "us-east1-d" "unsubmaster"')
+  os.system('gcloud -q compute  instances delete --zone "us-east1-d" "unsubmaster"')
   log.info('called stop')
 
 def turnOff():

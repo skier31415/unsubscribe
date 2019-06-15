@@ -46,4 +46,4 @@ ENTRYPOINT ["python"]
 
 CMD ["main.py"]
 
-# cp unsubscribe/Dockerfile* .; docker build -f Dockerfile_slave -t latest .; docker tag latest gcr.io/hosting-2718/unsubslave; docker push gcr.io/hosting-2718/unsubslave;
+# cp unsubscribe/Dockerfile* .; docker build -f Dockerfile_slave -t latest .; docker tag latest gcr.io/consulting-2718/unsubslave; docker push gcr.io/consulting-2718/unsubslave;
