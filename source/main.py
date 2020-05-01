@@ -1,3 +1,6 @@
+import time
+#time.sleep(30)  # wait for the sql connection
+
 from sql import fetch
 from sql import commit
 import time
@@ -167,6 +170,9 @@ def deleteAllUnsubs():
       commit('delete from unsubs where hash=%s',hh)
   
 def mainMaster(wipe=False):
+  print('aoeu')
+  log.info('starting master')
+  time.sleep(20)  # wait for ip address to be added to sql instance
   log.tid = newHash()
   if wipe:
     schema.wipe()
@@ -229,6 +235,7 @@ def printAnalytics():
 
 def mainSlave():
   log.info('starting slave')
+  time.sleep(20)  # wait for ip address to be added to sql instance
   log.tid = newHash()
   it = 0
   oldNum = 0

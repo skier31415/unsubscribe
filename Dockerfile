@@ -28,14 +28,24 @@ ENV PATH="/app:${PATH}"
 COPY unsubscribe/geckodriver.sh /app/geckodriver.sh
 RUN sh /app/geckodriver.sh
 
-RUN pip install setuptools -U
+RUN pip install setuptools==44 -U
 COPY unsubscribe/requirements.txt /app/requirements.txt
+RUN pip install --upgrade --ignore-installed six==1.10.0
 RUN pip install -r /app/requirements.txt
+
+RUN pip install --upgrade --ignore-installed google-cloud-logging==1.15.0
+
+
+RUN pip install --upgrade --ignore-installed  google-cloud-core==1.3.0
+RUN pip install --upgrade --ignore-installed google-api-core==1.17.0
+RUN pip install --upgrade --ignore-installed google-api-python-client==1.7.4
 
 
 
 COPY unsubscribe/source/ /app/
 COPY auth /auth/
+
+ENV GOOGLE_APPLICATION_CREDENTIALS="/auth/hosting-2718-53999677960d.json"
 
 ENV PYTHONPATH /app/
 
@@ -45,4 +55,7 @@ ENTRYPOINT ["python"]
 
 CMD ["main.py"]
 
-# cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/consulting-2718/unsubmaster; docker push gcr.io/consulting-2718/unsubmaster;
+# cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/hosting-2718/unsubmaster; docker push gcr.io/hosting-2718/unsubmaster;
+
+
+# docker run gcr.io/hosting-2718/unsubmaster;

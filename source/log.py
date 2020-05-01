@@ -4,8 +4,8 @@ import traceback
 import sys
 import os
 
-allOff = True
-cloudLog = False
+allOff = False
+cloudLog = True
 logger = None
 tid = 'tiddefault'
 
@@ -13,14 +13,20 @@ tid = 'tiddefault'
 if not allOff and cloudLog:
   bucket = 'main'
   try:
-    from google.cloud import logging
+    print 1
+    import google.cloud.logging as logging
+    print 2
     logging_client = logging.Client('hosting-2718')
+    print 3
     logger = logging_client.logger(bucket)
-  except:
-    pass
+    print 4
+  except Exception as e:
+    print 'herree', e, 'aoeu'
 
 def log(entry, bucket='main', severity='INFO'):
+  print('here')
   if allOff:
+    print('what')
     print entry
     return
   try:
@@ -39,11 +45,14 @@ def log(entry, bucket='main', severity='INFO'):
     entry += ' bad exc_info' + str(e)
   if logger:
     try:
+      print('trying log')
       logger.log_text(str(entry) + tid, severity=severity)
+      print('successful log')
     except Exception as e:
       print >> sys.stderr, 'failed logging', str(e)
   else:
     try:
+      print('blahh')
       print >> sys.stderr, str(str(entry).encode('utf-8', 'replace'))
     except Exception as e:
       print >> sys.stderr, 'failed printing', str(e)
