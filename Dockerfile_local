@@ -1,48 +1,73 @@
-FROM ubuntu:14.04
+FROM ubuntu:20.04
 
 RUN apt-get update -y
 RUN apt-get install -y --fix-missing build-essential 
 RUN apt-get install -y --fix-missing gcc 
-RUN apt-get install -y --fix-missing python-dev 
-RUN apt-get install -y --fix-missing python-pip 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/New_York
+
+RUN apt-get install -y unzip
+RUN apt-get install -y  xvfb 
+RUN apt-get install -y libxi6 
+RUN apt-get install -y libgconf-2-4
+
+RUN apt-get install -y --fix-missing curl
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
+RUN echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get -y update
+RUN apt-get -y install google-chrome-stable
+RUN wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+RUN unzip chromedriver_linux64.zip
+RUN mv chromedriver /usr/bin/chromedriver
+RUN chown root:root /usr/bin/chromedriver
+RUN chmod +x /usr/bin/chromedriver
+
+RUN apt-get install -y --fix-missing python3-dev 
+RUN apt-get install -y --fix-missing python3-pip 
+
 RUN apt-get install -y --fix-missing libmysqlclient-dev 
 RUN apt-get install -y --fix-missing git  
 RUN apt-get install -y --fix-missing wget 
 RUN apt-get install -y --fix-missing unzip 
-RUN apt-get install -y --fix-missing firefox
 RUN apt-get install -y --fix-missing xvfb 
 RUN apt-get install -y --fix-missing tar
-#libglib2.0-0 libxi6 libgconf-2-4 ibglib2.0-0 libxss1 libgconf-2-4 libnss3 libfontconfig libX11.6 
 
+RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
+RUN mkdir -p /usr/local/gcloud
+RUN tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz
+RUN /usr/local/gcloud/google-cloud-sdk/install.sh
+ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 WORKDIR /app
 
 ENV PATH="/app:${PATH}"
 
-# move above pip
-COPY unsubscribe/geckodriver.sh /app/geckodriver.sh
-RUN sh /app/geckodriver.sh
 
-RUN pip install --upgrade pip
-RUN pip install --ignore-installed six
-RUN pip install --ignore-installed urllib3
-RUN pip install --upgrade pip
-RUN pip install --upgrade pip==8.1.2
 COPY unsubscribe/requirements.txt /app/requirements.txt
-RUN pip install -r /app/requirements.txt
+RUN pip3 install -r /app/requirements.txt
+
+RUN pip3 install --upgrade --ignore-installed google-cloud-logging==1.15.0
+
+
+RUN pip3 install --upgrade --ignore-installed  google-cloud-core==1.3.0
+RUN pip3 install --upgrade --ignore-installed google-api-core==1.17.0
+RUN pip3 install --upgrade --ignore-installed google-api-python-client==1.7.4
 
 
 
 COPY unsubscribe/source/ /app/
 COPY auth /auth/
 
+ENV GOOGLE_APPLICATION_CREDENTIALS="/auth/hosting-2718-53999677960d.json"
+
 ENV PYTHONPATH /app/
 
 RUN echo "$(cat /app/main.py)\nprintAnalytics()" > /app/main.py
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 
 CMD ["local.py"]
 #CMD ["main.py"]
 
-#docker build -f Dockerfile_local .
+
+# cp unsubscribe/Dockerfile* .; docker build -f Dockerfile_local -t latest .; docker tag latest gcr.io/hosting-2718/local;  docker run gcr.io/hosting-2718/local;

@@ -13,21 +13,19 @@ tid = 'tiddefault'
 if not allOff and cloudLog:
   bucket = 'main'
   try:
-    print 1
+    print(1)
     import google.cloud.logging as logging
-    print 2
+    print(2)
     logging_client = logging.Client('hosting-2718')
-    print 3
+    print(3)
     logger = logging_client.logger(bucket)
-    print 4
+    print(4)
   except Exception as e:
-    print 'herree', e, 'aoeu'
+    print('herree', e, 'aoeu')
 
 def log(entry, bucket='main', severity='INFO'):
-  print('here')
+  print(entry)
   if allOff:
-    print('what')
-    print entry
     return
   try:
     exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -49,13 +47,13 @@ def log(entry, bucket='main', severity='INFO'):
       logger.log_text(str(entry) + tid, severity=severity)
       print('successful log')
     except Exception as e:
-      print >> sys.stderr, 'failed logging', str(e)
+      print(sys.stderr, 'failed logging', str(e))
   else:
     try:
       print('blahh')
-      print >> sys.stderr, str(str(entry).encode('utf-8', 'replace'))
+      print(sys.stderr, str(str(entry).encode('utf-8', 'replace')))
     except Exception as e:
-      print >> sys.stderr, 'failed printing', str(e)
+      print(sys.stderr, 'failed printing', str(e))
 
 def debug(*entry):
   log(str(entry), 'main', 'DEBUG')
@@ -74,4 +72,4 @@ def error(*entry):
 #logging_client = logging.Client()
 #logger = logging_client.logger(bucket)
 #logger.log_text(entry, severity=severity)
-#print entry,bucket,severity
+#print(entry,bucket,severity

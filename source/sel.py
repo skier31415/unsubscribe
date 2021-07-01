@@ -51,6 +51,10 @@ from pyvirtualdisplay import Display
 from selenium import webdriver
 display = None
 
+from selenium.webdriver.chrome.options import Options
+
+
+
 def getBrowser():
   # import subprocess
   # try:
@@ -64,7 +68,14 @@ def getBrowser():
   # capabilities = webdriver.DesiredCapabilities().FIREFOX
   # capabilities["marionette"] = False
   # browser = webdriver.Firefox(capabilities=capabilities)
-  browser = webdriver.Firefox()
+  chrome_options = Options()
+  chrome_options.add_argument("--disable-extensions")
+  chrome_options.add_argument("--start-maximized")
+  chrome_options.add_argument("--disable-infobars")
+  chrome_options.add_argument("--disable-gpu")
+  chrome_options.add_argument("--disable-dev-shm-usage")
+  chrome_options.add_argument("--no-sandbox")
+  browser = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=chrome_options)
   log.info('got browser')
   #browser.implicitly_wait(10)
   return browser

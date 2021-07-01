@@ -30,7 +30,7 @@ def newHash():
 def hashEmail(email):
   email = email.lower() + salt
   m = hashlib.sha256()
-  m.update(email)
+  m.update(email.encode())
   digest = m.hexdigest()
   return digest
 
@@ -172,7 +172,7 @@ def deleteAllUnsubs():
 def mainMaster(wipe=False):
   print('aoeu')
   log.info('starting master')
-  time.sleep(20)  # wait for ip address to be added to sql instance
+  time.sleep(40)  # wait for ip address to be added to sql instance
   log.tid = newHash()
   if wipe:
     schema.wipe()
@@ -235,7 +235,7 @@ def printAnalytics():
 
 def mainSlave():
   log.info('starting slave')
-  time.sleep(20)  # wait for ip address to be added to sql instance
+  time.sleep(40)  # wait for ip address to be added to sql instance
   log.tid = newHash()
   it = 0
   oldNum = 0

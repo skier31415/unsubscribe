@@ -1,6 +1,9 @@
 import datetime
 from datetime import timedelta
 import os
+import time
+import log
+log.info('first')
 
 def hashEmail(a):
   return 'aoeu'
@@ -11,24 +14,24 @@ from sql import commit
 
 def countPending():
   results = fetch('select count(hash) from unsubs')
-  print 'num pending', results
+  print('num pending', results)
   results = fetch('select * from unsubs')
-  print 'pending', results
+  print('pending', results)
   
   results = fetch('select count(distinct unsubhash) as b from anonymousanalytics group by emailhash order by b desc')
-  #print results
+  #print(results
   results = fetch('select count(distinct emailhash ) from anonymousanalytics ')
-  print 'num distict helped', results
+  print('num distict helped', results)
 
 def deleteAllUnsubs():
   commit('delete from unsubs where true')
 
 def percentSuccess():
   results = fetch('select success, count(*) from anonymousanalytics group by success')
-  print 'success ', results
+  print('success ', results)
   dt = datetime.datetime.now() - timedelta(days=20)
   results = fetch('select success, count(*) from anonymousanalytics  where stamp > %s group by success',str(dt)[:11])
-  print 'success within 20 days', results
+  print('success within 20 days', results)
 # ("Fetch query:select success, count(*) from anonymousanalytics  where stamp > %s group by success['2018-06-02 ']",)
 #   success within 20 days [[0L, 651L], [1L, 787L]]
   
@@ -43,13 +46,13 @@ class Uns:
 def doUns():
   from selenium import webdriver
   from selenium.webdriver.common.keys import Keys
-  print '1'
+  print('1')
   driver = webdriver.Firefox()
-  print '2'
+  print('2')
   driver.get("http://www.python.org")
-  print '3'
+  print('3')
   assert "Python" in driver.title
-  print '4'
+  print('4')
   return
   import time
   uns = Uns()
@@ -57,16 +60,16 @@ def doUns():
   uns.email='william.k.dvorak@gmail.com'
   uns.hashh = 'default'
   browser = sel.getBrowserNoDisplay()
-  print 'hre22',browser
-  print sel.processPage(uns,browser)
+  print('hre22',browser)
+  print(sel.processPage(uns,browser))
   time.sleep(30)
   browser = sel.getBrowser()
-  print 'hre',browser
-  print sel.processPage(uns,browser)
+  print('hre',browser)
+  print(sel.processPage(uns,browser))
   browser = sel.getBrowserNoDisplay()
-  print 'hre22',browser
-  print sel.processPage(uns,browser)
-  print 'done'
+  print('hre22',browser)
+  print(sel.processPage(uns,browser))
+  print('done')
 
 
 def allUnsuccessful():
@@ -77,12 +80,12 @@ def allUnsuccessful():
   i = 0
   low = 200
   high = low+10
-  print len(ss.keys())
-  for k,v in ss.iteritems():
+  print(len(ss.keys()))
+  for k,v in list(ss.items()):
     if i > low:
       os.system('open '+k)
-      print v
-      print k
+      print(v)
+      print(k)
     i+=1
     if i > high:
       break
@@ -92,9 +95,9 @@ def allUnsuccessful():
 def getProblem():
   hashh = 'lrnbgg19'
   results = fetch('select * from unsubs where hash="lrnbgg19"')
-  print results
+  print(results)
   results = fetch('select count(*) from unsubs ')
-  print results
+  print(results)
   
 #getProblem()
 
@@ -119,27 +122,27 @@ def anal(email):
   
 def deleteReadEmail17days():
   results = fetch('select email from readmail')
-  print results[-10:]
+  print(results[-10:])
   
   start = 6000
   for r in results:
     commit('delete from readmail where email=%s',str(start))
     start += 1
   results = fetch('select email from readmail')
-  print results[-10:]
+  print(results[-10:])
 
 
   
 def deleteLastReads():
   results = fetch('select email from readmail')
-  print results[-10:]
+  print(results[-10:])
   
   total = len(results)
   
   for r in results[total-150:]:
     commit('delete from readmail where email=%s',r[0])
   results = fetch('select email from readmail')
-  print results[-10:]
+  print(results[-10:])
   
 #deleteLastReads()
 #deleteReadEmail17days()

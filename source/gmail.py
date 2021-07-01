@@ -16,8 +16,8 @@ lookaroundLenLoose = 1300
 
 linkPositives = ['unsubscribe', 'remove', 'stop receiv', 'opt-out', 'opt out','not to receiv', 'not receiv', 'manage subscript', 'manage my subscript', 'manage your subscript', 'don\'t want to receive update', 'don\'t want to receive email', 'no longer wish to receive']
   
-import HTMLParser
-parser = HTMLParser.HTMLParser()
+from html.parser import HTMLParser
+parser = HTMLParser()
 
 def newHash():
   lets = string.ascii_letters[:26] + string.digits
@@ -105,8 +105,9 @@ def getCandidates(body):
     
   
 def processOne(mail, i, actuallyCommit=False):
+  log.info('email number '+str(i))
   try:
-    unused, data = mail.fetch(i, '(RFC822)' )
+    unused, data = mail.fetch(str(i), '(RFC822)' )
   except Exception as e:
     log.info(e)
   hashh = newHash()
@@ -114,7 +115,7 @@ def processOne(mail, i, actuallyCommit=False):
     if not isinstance(response_part, tuple):
       continue
       
-    msg = email.message_from_string(response_part[1])
+    msg = email.message_from_string(str(response_part[1]))
     fromAddress = getAddress(msg)
     
     body = msg.as_string()
