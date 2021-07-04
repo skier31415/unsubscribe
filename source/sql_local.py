@@ -5,7 +5,7 @@ con = None
 import pymysql
 import time
 
-f = open('/auth/sql_private.txt')
+f = open('/auth/sql.txt')
 lines = f.readlines()
 f.close()
 user = lines[0][:-1]

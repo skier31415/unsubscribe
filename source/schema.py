@@ -11,6 +11,10 @@ def setup():
     email INT, \
     PRIMARY KEY (id))''')
     
+  commit('''CREATE TABLE readmailhash(id INT NOT NULL AUTO_INCREMENT, \
+    email VARCHAR(16), \
+    PRIMARY KEY (id))''')
+    
   commit('''CREATE TABLE usercount(id INT NOT NULL AUTO_INCREMENT, \
     another INT, \
     PRIMARY KEY (id))''')

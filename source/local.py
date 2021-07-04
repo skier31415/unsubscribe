@@ -1,3 +1,5 @@
+
+
 import datetime
 from datetime import timedelta
 import os
@@ -8,15 +10,15 @@ log.info('first')
 def hashEmail(a):
   return 'aoeu'
 
-import sql
-from sql import fetch
-from sql import commit
+import sql_local as sql
+from sql_local import fetch
+from sql_local import commit
 
 def countPending():
   results = fetch('select count(hash) from unsubs')
   print('num pending', results)
   results = fetch('select * from unsubs')
-  print('pending', results)
+  #print('pending', results)
   
   results = fetch('select count(distinct unsubhash) as b from anonymousanalytics group by emailhash order by b desc')
   #print(results

@@ -52,6 +52,7 @@ RUN pip3 install --upgrade --ignore-installed google-cloud-logging==1.15.0
 RUN pip3 install --upgrade --ignore-installed  google-cloud-core==1.3.0
 RUN pip3 install --upgrade --ignore-installed google-api-core==1.17.0
 RUN pip3 install --upgrade --ignore-installed google-api-python-client==1.7.4
+RUN pip3 install --upgrade --ignore-installed google-cloud-storage==1.40.0
 
 
 

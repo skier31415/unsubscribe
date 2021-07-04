@@ -5,7 +5,7 @@ from sql import fetch
 from sql import commit
 import time
 import sel as selenium
-import gmail
+import oauthgmail
 import schema
 import log
 import hashlib
@@ -172,28 +172,18 @@ def deleteAllUnsubs():
 def mainMaster(wipe=False):
   print('aoeu')
   log.info('starting master')
-  time.sleep(90)  # wait for ip address to be added to sql instance
+  #time.sleep(90)  # wait for ip address to be added to sql instance
   log.tid = newHash()
-  if wipe:
-    schema.wipe()
-  mail =  gmail.connect()
   
   it = 0
   while True:
     it += 1
     log.info('reading email')
     try:
-      gmail.readEmailFromGmail(mail)
+      oauthgmail.getEmails()
     except Exception as e:
       log.info('exception', e)
-      if it % 2 == 1:
-        try:
-          mail = gmail.connect()
-        except Exception as e:
-          log.info('exception', e)
     sleeplen = 60
-    if it % 1000 == 0:
-      mail = gmail.connect()
     #removeDockerCruft()
     turnOffInstanceFromDocker()
 
@@ -235,7 +225,7 @@ def printAnalytics():
 
 def mainSlave():
   log.info('starting slave')
-  time.sleep(90)  # wait for ip address to be added to sql instance
+  #time.sleep(90)  # wait for ip address to be added to sql instance
   log.tid = newHash()
   it = 0
   oldNum = 0
