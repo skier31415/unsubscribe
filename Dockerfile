@@ -58,7 +58,7 @@ RUN pip3 install --upgrade --ignore-installed google-api-python-client==1.7.4
 COPY unsubscribe/source/ /app/
 COPY auth /auth/
 
-ENV GOOGLE_APPLICATION_CREDENTIALS="/auth/hosting-2718-53999677960d.json"
+ENV GOOGLE_APPLICATION_CREDENTIALS="/auth/consulting-2718-d9894256ea82.json"
 
 ENV PYTHONPATH /app/
 
@@ -68,7 +68,7 @@ ENTRYPOINT ["python3"]
 
 CMD ["main.py"]
 
-# cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/hosting-2718/unsubmaster; docker push gcr.io/hosting-2718/unsubmaster;
+# cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/consulting-2718/unsubmaster; docker push gcr.io/consulting-2718/unsubmaster;
 
 
-#  cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/hosting-2718/unsubmaster;docker run gcr.io/hosting-2718/unsubmaster;
+#  cp unsubscribe/Dockerfile* .; docker build  -t latest .; docker tag latest gcr.io/consulting-2718/unsubmaster;docker run gcr.io/consulting-2718/unsubmaster;
